@@ -1,6 +1,7 @@
 package com.example.watchlistexample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -14,19 +15,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.watchlistexample.domain.ForexWatchlistUseCase
 import com.example.watchlistexample.ui.theme.WatchlistExampleTheme
 import com.example.watchlistexample.ui.view.PortfolioScreen
 import com.example.watchlistexample.ui.view.WatchlistScreen
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var forexWatchlistUseCase: ForexWatchlistUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launchWhenStarted {
+            val result = forexWatchlistUseCase.getForex(listOf("EURUSD", "GBPUSD"))
+            Log.e("MainActivity", "result: $result")
+        }
         setContent {
             MainScreen()
         }
