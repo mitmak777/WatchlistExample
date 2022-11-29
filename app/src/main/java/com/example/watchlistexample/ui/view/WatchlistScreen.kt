@@ -24,11 +24,24 @@ fun WatchlistScreen() {
         Column {
             SummaryView()
             WatchlistHeaderCellView()
-            LazyColumn {
+            val list = listOf(
+                WatchlistItem("AAPL", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL1", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL2", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL3", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL4", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL5", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL6", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL7", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL8", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL9", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL10", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
+                WatchlistItem("AAPL11", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)))
+            LazyColumn() {
 
-                items(20) {
+                items(list.size, key = {index ->  list[index].symbol}) { index ->
 
-                    WatchlistItemView()
+                    WatchlistItemView(list[index])
                 }
 
             }
@@ -39,7 +52,7 @@ fun WatchlistScreen() {
 
 @Preview
 @Composable
-fun WatchlistScreenPreview(){
+fun WatchlistScreenPreview() {
     WatchlistScreen()
 }
 
@@ -184,16 +197,16 @@ fun WatchlistHeaderCellView() {
                 .background(Color.White)) {
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black,text = "Symbol")
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Symbol")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black,text = "Change")
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Change")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black,text = "Sell")
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Sell")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black,text = "Buy")
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Buy")
         }
         Divider(Modifier
             .fillMaxWidth()
