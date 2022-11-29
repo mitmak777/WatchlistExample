@@ -1,15 +1,13 @@
 package com.example.watchlistexample.di
 
-import com.example.watchlistexample.data.ForexAPIService
+import com.example.watchlistexample.data.datasource.ForexAPIService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 
 @Module
@@ -32,11 +30,6 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    }
-
-    @Provides
-    fun provideForexApiService(retrofit: Retrofit): ForexAPIService {
-        return retrofit.create(ForexAPIService::class.java)
     }
 
 

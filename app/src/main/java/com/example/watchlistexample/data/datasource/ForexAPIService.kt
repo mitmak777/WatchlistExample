@@ -1,5 +1,6 @@
-package com.example.watchlistexample.data
+package com.example.watchlistexample.data.datasource
 
+import com.example.watchlistexample.data.ForexNetworkReponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

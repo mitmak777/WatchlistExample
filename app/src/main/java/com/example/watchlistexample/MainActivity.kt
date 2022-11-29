@@ -23,10 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.watchlistexample.domain.ForexWatchlistUseCase
+import com.example.watchlistexample.domain.ForexWatchlistUseCaseImpl
 import com.example.watchlistexample.ui.theme.WatchlistExampleTheme
 import com.example.watchlistexample.ui.view.PortfolioScreen
 import com.example.watchlistexample.ui.view.WatchlistScreen
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,8 +40,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenStarted {
-            val result = forexWatchlistUseCase.getForex(listOf("EURUSD", "GBPUSD"))
-            Log.e("MainActivity", "result: $result")
+            forexWatchlistUseCase.getForexList(listOf("EURUSD", "GBPUSD")).collectLatest {
+                Log.e("MainActivity", "result: $it")
+            }
+
         }
         setContent {
             MainScreen()

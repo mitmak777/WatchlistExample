@@ -1,6 +1,7 @@
 package com.example.watchlistexample.data
 
 import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
 
 data class ForexNetworkReponse(
 
@@ -11,8 +12,7 @@ data class ForexNetworkReponse(
 
 data class RateDetail(
     var pair: String = "",
-    @SerializedName("rate") var rate: Double? = null,
-    @SerializedName("timestamp") var timestamp: Int? = null
-
+    @SerializedName("rate") var rate: BigDecimal? = null,
+    @SerializedName("timestamp") var timestamp: Long? = null
 
 )
