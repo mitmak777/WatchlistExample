@@ -43,7 +43,7 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
         accountFxList.forEach { accountFxItem ->
             val fx = fxList.find { accountFxItem.currencyPair == it.forexPair }
             if (fx != null) {
-                val currentValue = fx.currentPrice.multiply(accountFxItem.amount).setScale(2, RoundingMode.HALF_UP)
+                val currentValue = (accountFxItem.amount.divide(fx.currentPrice,10, RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP)
                 Log.e("ForexWatchlistViewModel", "currentValue: $currentValue")
                 balance = balance.plus(currentValue)
             }
@@ -76,7 +76,6 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
                     _isLoading.value = false
                     it.getOrNull()?.let { fxDetailList ->
                         _isError.value = false
-                        Log.e("ForexWatchlistViewModel", "fxDetailList: $fxDetailList")
                         _fxListStateFlow.value = fxDetailList
                         if (_accountFxListStateFlow.value.isEmpty()) {
                             _accountFxListStateFlow.value = forexWatchlistUseCase.getEquity(fxDetailList)?.getOrNull()

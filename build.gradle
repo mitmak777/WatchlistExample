@@ -1,9 +1,13 @@
 buildscript {
     ext {
         composeBom_version = '2022.10.00'
+        composeNavigateVersion = '1.0.0'
         okHttpVersion = '4.10.0'
         retrofitVersion = '2.9.0'
         hiltVersion = "2.42"
+        mockkAndroidVersion = "1.12.3"
+        kotlinxCoroutinesTestVersion = "1.6.3"
+        turbineVersion = "0.9.0"
 
     }
 

@@ -1,6 +1,5 @@
 package com.example.watchlistexample.ui.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +20,6 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.example.watchlistexample.ui.ForexWatchlistViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -35,29 +34,25 @@ fun WatchlistScreen(viewModel: ForexWatchlistViewModel = hiltViewModel()) {
     val isLoading = viewModel.isLoading.collectAsState(false)
     val isError = viewModel.isError.collectAsState(false)
     Surface {
-        Column(modifier = Modifier.background(Color.Cyan)) {
+        Column(modifier = Modifier.background(Color(0xFF05033D))) {
             SummaryView(equity.value, balance.value, margin.value, usedValue.value)
-            WatchlistHeaderCellView()
-            Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
-                if(isLoading.value) {
+            WatchlistHeaderView()
+            Box(modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()) {
+                if (isLoading.value) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }else if(isError.value) {
+                } else if (isError.value) {
                     Button(onClick = {
                         viewModel.retryFetching()
                     }, modifier = Modifier.align(Alignment.Center)) {
                         Text(text = "Retry")
                     }
-                }else{
-
+                } else {
                     LazyColumn(modifier = Modifier.fillMaxHeight()) {
                         items(list.value.size, key = { index -> list.value.get(index).symbol }) { index ->
                             WatchlistItemView(list.value.get(index))
                         }
-                    }
-                    Button(onClick = {
-                        viewModel.retryFetching()
-                    }, modifier = Modifier.align(Alignment.Center)) {
-                        Text(text = "Retry")
                     }
                 }
             }
@@ -89,6 +84,7 @@ fun SummaryViewItem(modifier: Modifier = Modifier,
         Text(
             overflow = TextOverflow.Ellipsis,
             text = title1,
+            color = Color(0xFF0694B8),
             modifier = Modifier.constrainAs(title1Ref) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
@@ -99,6 +95,7 @@ fun SummaryViewItem(modifier: Modifier = Modifier,
         )
         Text(
             text = value1,
+            color = Color.White,
             modifier = Modifier.constrainAs(value1Ref) {
                 top.linkTo(title1Ref.top)
                 start.linkTo(title1Ref.end)
@@ -109,6 +106,7 @@ fun SummaryViewItem(modifier: Modifier = Modifier,
         )
         Text(
             text = title2,
+            color = Color(0xFF0694B8),
             modifier = Modifier.constrainAs(title2Ref) {
                 top.linkTo(title1Ref.bottom)
                 start.linkTo(parent.start)
@@ -117,6 +115,7 @@ fun SummaryViewItem(modifier: Modifier = Modifier,
         )
         Text(
             text = value2,
+            color = Color.White,
             modifier = Modifier.constrainAs(value2Ref) {
                 top.linkTo(title2Ref.top)
                 start.linkTo(value1Ref.start)
@@ -148,12 +147,13 @@ fun SummaryView(
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp)
-        .height(60.dp)
+        .height(65.dp)
         .clip(RoundedCornerShape(4.dp))
-        .background(Color.Blue)) {
+        .background(Color(0xFF274191))
+    ) {
         Box(modifier = Modifier
             .weight(1f)
-            .background(Color.Red)) {
+        ) {
             SummaryViewItem(title1 = "Equity", value1 = equity.toPriceString(),
                 title2 = "Balance", value2 = balance.toPriceString())
         }
@@ -165,7 +165,7 @@ fun SummaryView(
             .background(Color.Gray))
         Box(modifier = Modifier
             .weight(1f)
-            .background(Color.Green)) {
+        ) {
             SummaryViewItem(title1 = "Margin", value1 = margin.toPriceString(),
                 title2 = "Used", value2 = usedValue.toPriceString())
         }
@@ -184,58 +184,27 @@ fun SummaryViewItemPreview() {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun SummaryViewPreview2() {
-    Card(shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(150.dp)
-            .fillMaxWidth()
-            .padding(10.dp)
-            .background(Color.Blue)) {
-        Row(modifier = Modifier.height(150.dp)) {
-            Column(modifier = Modifier
-                .weight(1f)
-                .background(Color.Red)) {
-
-            }
-            Divider(modifier = Modifier
-                .width(1.dp)
-                .fillMaxHeight()
-                .padding(4.dp)
-                .background(Color.Gray))
-            Column(modifier = Modifier
-                .weight(1f)
-                .background(Color.Green)) {
-
-            }
-        }
-    }
-}
-
-
 @Preview(showBackground = false)
 @Composable
-fun WatchlistHeaderCellView() {
+fun WatchlistHeaderView() {
     Column {
         Row(horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
-                .background(Color.White)) {
+                .height(30.dp)) {
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Symbol")
+                .align(Alignment.CenterVertically),
+                textAlign = TextAlign.Center, color = Color(0xFF0694B8), text = "Symbol")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Change")
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color = Color(0xFF0694B8), text = "Change")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Sell")
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color = Color(0xFF0694B8), text = "Sell")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "Buy")
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color = Color(0xFF0694B8), text = "Buy")
         }
         Divider(Modifier
             .fillMaxWidth()
@@ -252,25 +221,30 @@ fun WatchlistItemView(item: WatchlistItem = WatchlistItem("EURUSD", BigDecimal(1
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(Color.White)) {
+        ) {
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.symbol)
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                text = item.symbol)
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color =
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color =
             when (item.change.compareTo(BigDecimal.ZERO)) {
                 -1 -> Color.Red
                 else -> Color.Green
             }, text = "${item.change}%")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.sell.toFormatDecimal())
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color = Color.White, text = item.sell.toFormatDecimal())
 
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.buy.toFormatDecimal())
+                .align(Alignment.CenterVertically), textAlign = TextAlign.Center, color = Color.White, text = item.buy.toFormatDecimal())
+
         }
+        Divider(modifier = Modifier.background(Color.Gray))
     }
 
 }

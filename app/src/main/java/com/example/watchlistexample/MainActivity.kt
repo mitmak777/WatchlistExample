@@ -1,5 +1,8 @@
 package com.example.watchlistexample
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -33,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -45,13 +49,12 @@ class MainActivity : ComponentActivity() {
                 Log.d("MainActivity", "Equity: $it")
             }
         }
-        vm.updateFxPair(listOf("USDEUR"))
+        vm.updateFxPair(listOf("USDEUR","USDGBP","USDAUD","USDNZD","USDCAD","USDCHF","USDJPY"))
         setContent {
             MainScreen()
         }
-
     }
-
+    
     override fun onPause() {
         super.onPause()
         vm.onPause()
@@ -117,7 +120,8 @@ fun BottomNavigation(navController: NavController) {
         BottomNavItem("Market", Icons.Default.AccountCircle, "market", "setting"),
     )
     BottomNavigation(
-        contentColor = Color.Black
+        backgroundColor = Color(0xFF274191),
+        contentColor = Color(0xFF0694B8)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -126,10 +130,15 @@ fun BottomNavigation(navController: NavController) {
                 icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                 label = {
                     Text(text = item.title,
+                        color =
+                        when (currentRoute) {
+                            item.screenRoute -> Color.White
+                            else -> Color(0xFF0694B8)
+                        },
                         fontSize = 9.sp)
                 },
-                selectedContentColor = Color.Black,
-                unselectedContentColor = Color.Black.copy(0.4f),
+                selectedContentColor = Color(0xFF0694B8),
+                unselectedContentColor = Color(0xFF0694B8),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.screenRoute,
                 onClick = {

@@ -9,23 +9,23 @@ import java.math.RoundingMode
 import java.util.*
 
 
-class AccountBalanceRepoImplTest{
+class AccountBalanceRepoImplTest {
 
     val sut = AccountBalanceRepoImpl()
 
     @Test
-    fun testGetAccountFxList() = runBlocking{
-        val fxList = listOf(ForexDetail("USDEUR", BigDecimal("1.03721"), 1.2.toBigDecimal(), 1.0.toBigDecimal(), 1.1.toBigDecimal(), Date().time))
+    fun testGetAccountFxList() = runBlocking {
+        val fxList = listOf(ForexDetail("USDEUR", BigDecimal("0.96357"), 1.2.toBigDecimal(), 1.0.toBigDecimal(), 1.1.toBigDecimal(), Date().time))
         val result = sut.getAccountFxList(fxList)
         assert(result.size == 1)
     }
 
     @Test
-    fun testStartingBalance() = runBlocking{
-        val fxList = listOf(ForexDetail("EURUSD", BigDecimal("1.037199"), 1.2.toBigDecimal(), 1.0.toBigDecimal(), 1.1.toBigDecimal(), Date().time))
+    fun testStartingBalance() = runBlocking {
+        val fxList = listOf(ForexDetail("USDEUR", BigDecimal("0.96357"), 1.2.toBigDecimal(), 1.0.toBigDecimal(), 1.1.toBigDecimal(), Date().time))
         val result = sut.getAccountFxList(fxList)
         result.forEachIndexed { index, accountFxItem ->
-            Assert.assertEquals((accountFxItem.amount * fxList[index].currentPrice).setScale(2,RoundingMode.HALF_UP), BigDecimal("10000").setScale(2))
+            Assert.assertEquals((accountFxItem.amount.divide(fxList[index].currentPrice)).setScale(2, RoundingMode.HALF_UP), BigDecimal("10000").setScale(2))
         }
     }
 
