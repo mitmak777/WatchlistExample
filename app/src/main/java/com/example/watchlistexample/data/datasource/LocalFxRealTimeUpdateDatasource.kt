@@ -20,7 +20,7 @@ class LocalFxRealTimeUpdateDatasource {
                 // simulate the response from the server
                 if(isRunning) {
                     emit(Result.success(pairs.map {
-                        val nextPrice = it.currentPrice.toDouble() * Random.nextDouble(0.9, 1.1)
+                        val nextPrice = it.prevPrice.toDouble() * Random.nextDouble(0.9, 1.1)
                         ForexDetail(
                             it.forexPair,
                             nextPrice.toBigDecimal(),

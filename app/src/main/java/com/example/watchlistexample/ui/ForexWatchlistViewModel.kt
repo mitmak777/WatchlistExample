@@ -27,8 +27,12 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
 
     private val _fxPairFlow: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     private val _accountFxListStateFlow: MutableStateFlow<List<AccountFxItem>> = MutableStateFlow(emptyList())
+
+
     private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
     private val _isError: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isError: StateFlow<Boolean> = _isError
 
 
     val equityFlow = _fxListStateFlow.filter { it.isNotEmpty() }.combine(_accountFxListStateFlow.filter { it.isNotEmpty() }) { fxList, accountFxList ->
@@ -39,7 +43,7 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
         accountFxList.forEach { accountFxItem ->
             val fx = fxList.find { accountFxItem.currencyPair == it.forexPair }
             if (fx != null) {
-                val currentValue = fx.currentPrice.multiply(accountFxItem.amount).setScale(2, RoundingMode.CEILING)
+                val currentValue = fx.currentPrice.multiply(accountFxItem.amount).setScale(2, RoundingMode.HALF_UP)
                 Log.e("ForexWatchlistViewModel", "currentValue: $currentValue")
                 balance = balance.plus(currentValue)
             }
@@ -90,6 +94,13 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
         _isLoading.value = true
         _fxPairFlow.value = pair
     }
+
+    fun retryFetching() {
+        val value = _fxPairFlow.value
+        _fxPairFlow.value = emptyList()
+        updateFxPair(value)
+    }
+
 
     fun onPause() {
         forexWatchlistUseCase.stopRealTimeUpdate()

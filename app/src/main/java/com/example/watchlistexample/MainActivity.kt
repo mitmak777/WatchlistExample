@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 Log.d("MainActivity", "Equity: $it")
             }
         }
-        vm.updateFxPair(listOf("EURUSD"))
+        vm.updateFxPair(listOf("USDEUR"))
         setContent {
             MainScreen()
         }

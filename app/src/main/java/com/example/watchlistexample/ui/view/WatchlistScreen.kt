@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -31,16 +32,37 @@ fun WatchlistScreen(viewModel: ForexWatchlistViewModel = hiltViewModel()) {
     val balance = viewModel.balanceFlow.collectAsState(null)
     val margin = viewModel.marginFlow.collectAsState(null)
     val usedValue = viewModel.usedValueFlow.collectAsState(null)
+    val isLoading = viewModel.isLoading.collectAsState(false)
+    val isError = viewModel.isError.collectAsState(false)
     Surface {
-        Column {
+        Column(modifier = Modifier.background(Color.Cyan)) {
             SummaryView(equity.value, balance.value, margin.value, usedValue.value)
             WatchlistHeaderCellView()
+            Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
+                if(isLoading.value) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }else if(isError.value) {
+                    Button(onClick = {
+                        viewModel.retryFetching()
+                    }, modifier = Modifier.align(Alignment.Center)) {
+                        Text(text = "Retry")
+                    }
+                }else{
 
-            LazyColumn() {
-                items(list.value.size, key = { index -> list.value.get(index).symbol }) { index ->
-                    WatchlistItemView(list.value.get(index))
+                    LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                        items(list.value.size, key = { index -> list.value.get(index).symbol }) { index ->
+                            WatchlistItemView(list.value.get(index))
+                        }
+                    }
+                    Button(onClick = {
+                        viewModel.retryFetching()
+                    }, modifier = Modifier.align(Alignment.Center)) {
+                        Text(text = "Retry")
+                    }
                 }
             }
+
+
         }
     }
 
@@ -224,7 +246,7 @@ fun WatchlistHeaderCellView() {
 
 @Preview(showBackground = true)
 @Composable
-fun WatchlistItemView(item: WatchlistItem = WatchlistItem("AAPL", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0))) {
+fun WatchlistItemView(item: WatchlistItem = WatchlistItem("EURUSD", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0))) {
     Column {
         Row(
             modifier = Modifier
@@ -236,15 +258,21 @@ fun WatchlistItemView(item: WatchlistItem = WatchlistItem("AAPL", BigDecimal(10.
                 .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.symbol)
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "${item.change}%")
+                .fillMaxHeight(), textAlign = TextAlign.Center, color =
+            when (item.change.compareTo(BigDecimal.ZERO)) {
+                -1 -> Color.Red
+                else -> Color.Green
+            }, text = "${item.change}%")
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.sell.toString())
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.sell.toFormatDecimal())
+
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.buy.toString())
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.buy.toFormatDecimal())
         }
     }
+
 }
 
 data class WatchlistItem(val symbol: String, val prev: BigDecimal, val sell: BigDecimal, val buy: BigDecimal, val price: BigDecimal) {
@@ -254,7 +282,11 @@ data class WatchlistItem(val symbol: String, val prev: BigDecimal, val sell: Big
 
 fun BigDecimal?.toPriceString(textForEmpty: String = "-"): String {
     return this?.let {
-        "\$${this?.setScale(2, RoundingMode.HALF_UP)?.toPlainString()}"
+        "\$${this.toFormatDecimal()}"
     } ?: textForEmpty
 
+}
+
+fun BigDecimal.toFormatDecimal(scale: Int = 2): String {
+    return this.setScale(scale, RoundingMode.HALF_UP).toPlainString()
 }
