@@ -23,4 +23,12 @@ class ForexWatchlistUseCaseImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override fun resumeRealTimeUpdate() {
+        forexListRepo.resumeRealTimeUpdate()
+    }
+
+    override fun stopRealTimeUpdate() {
+        forexListRepo.stopRealTimeUpdate()
+    }
 }

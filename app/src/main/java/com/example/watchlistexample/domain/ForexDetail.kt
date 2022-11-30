@@ -9,7 +9,4 @@ data class ForexDetail(
     val sellPrice: BigDecimal,
     val prevPrice: BigDecimal,
     val timestamp: Long
-){
-    val change: BigDecimal
-        get() = (currentPrice - prevPrice) / prevPrice
-}
+)

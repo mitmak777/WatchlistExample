@@ -11,23 +11,36 @@ import java.math.BigDecimal
 import kotlin.random.Random
 
 class LocalFxRealTimeUpdateDatasource {
+
+    private var isRunning = true
     fun getForexRealTimeUpdate(pairs: List<ForexDetail>): Flow<Result<List<ForexDetail>>> {
         return flow{
-            while(currentCoroutineContext().isActive) {
+            while(currentCoroutineContext().isActive ) {
                 delay(1000)
-                emit(Result.success(pairs.map {
-                    val nextPrice = it.currentPrice.toDouble() * Random.nextDouble(0.9, 1.1)
-                    ForexDetail(
-                        it.forexPair,
-                        nextPrice.toBigDecimal(),
-                        (nextPrice * Random.nextDouble(0.9, 1.0)).toBigDecimal(),
-                        (nextPrice * Random.nextDouble(1.0, 1.1)).toBigDecimal(),
-                        it.prevPrice,
-                        it.timestamp
-                    )
-                }))
+                // simulate the response from the server
+                if(isRunning) {
+                    emit(Result.success(pairs.map {
+                        val nextPrice = it.currentPrice.toDouble() * Random.nextDouble(0.9, 1.1)
+                        ForexDetail(
+                            it.forexPair,
+                            nextPrice.toBigDecimal(),
+                            (nextPrice * Random.nextDouble(0.9, 1.0)).toBigDecimal(),
+                            (nextPrice * Random.nextDouble(1.0, 1.1)).toBigDecimal(),
+                            it.prevPrice,
+                            it.timestamp
+                        )
+                    }))
+                }
             }
         }
 
+    }
+
+    fun stopRealTimeUpdate(){
+        isRunning = false
+    }
+
+    fun resumeRealTimeUpdate(){
+        isRunning = true
     }
 }

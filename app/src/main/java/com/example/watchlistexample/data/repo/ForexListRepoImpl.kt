@@ -43,4 +43,12 @@ class ForexListRepoImpl @Inject constructor(
         }
     }
 
+    override fun resumeRealTimeUpdate() {
+        realtimeSource.resumeRealTimeUpdate()
+    }
+
+    override fun stopRealTimeUpdate() {
+        realtimeSource.stopRealTimeUpdate()
+    }
+
 }

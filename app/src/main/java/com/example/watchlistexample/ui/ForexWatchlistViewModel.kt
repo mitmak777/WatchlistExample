@@ -28,6 +28,7 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
     private val _fxPairFlow: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     private val _accountFxListStateFlow: MutableStateFlow<List<AccountFxItem>> = MutableStateFlow(emptyList())
     private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val _isError: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
 
     val equityFlow = _fxListStateFlow.filter { it.isNotEmpty() }.combine(_accountFxListStateFlow.filter { it.isNotEmpty() }) { fxList, accountFxList ->
@@ -70,12 +71,15 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
                 forexWatchlistUseCase.getForexList(it).collectLatest {
                     _isLoading.value = false
                     it.getOrNull()?.let { fxDetailList ->
+                        _isError.value = false
                         Log.e("ForexWatchlistViewModel", "fxDetailList: $fxDetailList")
                         _fxListStateFlow.value = fxDetailList
                         if (_accountFxListStateFlow.value.isEmpty()) {
                             _accountFxListStateFlow.value = forexWatchlistUseCase.getEquity(fxDetailList)?.getOrNull()
                                 ?: emptyList()
                         }
+                    } ?: run {
+                        _isError.value = true
                     }
                 }
             }
@@ -86,4 +90,13 @@ class ForexWatchlistViewModel @Inject constructor(private val forexWatchlistUseC
         _isLoading.value = true
         _fxPairFlow.value = pair
     }
+
+    fun onPause() {
+        forexWatchlistUseCase.stopRealTimeUpdate()
+    }
+
+    fun onResume() {
+        forexWatchlistUseCase.resumeRealTimeUpdate()
+    }
+
 }

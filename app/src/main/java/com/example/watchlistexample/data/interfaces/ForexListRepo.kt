@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ForexListRepo {
     suspend fun getForexList(pairs: List<String>): Flow<Result<List<ForexDetail>>>
+    fun resumeRealTimeUpdate()
+    fun stopRealTimeUpdate()
 }

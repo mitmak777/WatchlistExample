@@ -27,18 +27,19 @@ import java.math.RoundingMode
 @Composable
 fun WatchlistScreen(viewModel: ForexWatchlistViewModel = hiltViewModel()) {
     val list = viewModel.fxListStateFlow.collectAsState()
+    val equity = viewModel.equityFlow.collectAsState(null)
+    val balance = viewModel.balanceFlow.collectAsState(null)
+    val margin = viewModel.marginFlow.collectAsState(null)
+    val usedValue = viewModel.usedValueFlow.collectAsState(null)
     Surface {
         Column {
-            SummaryView()
+            SummaryView(equity.value, balance.value, margin.value, usedValue.value)
             WatchlistHeaderCellView()
 
             LazyColumn() {
-
                 items(list.value.size, key = { index -> list.value.get(index).symbol }) { index ->
-
                     WatchlistItemView(list.value.get(index))
                 }
-
             }
         }
     }
@@ -53,56 +54,61 @@ fun WatchlistScreenPreview() {
 
 
 @Composable
-fun SummaryViewItem(modifier: Modifier = Modifier) {
+fun SummaryViewItem(modifier: Modifier = Modifier,
+    title1: String = "",
+    title2: String = "",
+    value1: String = "",
+    value2: String = "") {
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
+        .padding(10.dp)
         .then(modifier)) {
-        val (title1, value1, title2, value2) = createRefs()
+        val (title1Ref, value1Ref, title2Ref, value2Ref) = createRefs()
         Text(
             overflow = TextOverflow.Ellipsis,
-            text = "Label 1:",
-            modifier = Modifier.constrainAs(title1) {
+            text = title1,
+            modifier = Modifier.constrainAs(title1Ref) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
-                end.linkTo(value1.start)
-                bottom.linkTo(value1.bottom)
+                end.linkTo(value1Ref.start)
+                bottom.linkTo(value1Ref.bottom)
                 width = Dimension.preferredWrapContent
             }
         )
         Text(
-            text = "Value 1",
-            modifier = Modifier.constrainAs(value1) {
-                top.linkTo(title1.top)
-                start.linkTo(title1.end)
+            text = value1,
+            modifier = Modifier.constrainAs(value1Ref) {
+                top.linkTo(title1Ref.top)
+                start.linkTo(title1Ref.end)
                 end.linkTo(parent.end)
-                bottom.linkTo(title1.bottom)
+                bottom.linkTo(title1Ref.bottom)
                 width = Dimension.preferredWrapContent
             }
         )
         Text(
-            text = "Label 2:",
-            modifier = Modifier.constrainAs(title2) {
-                top.linkTo(title1.bottom)
+            text = title2,
+            modifier = Modifier.constrainAs(title2Ref) {
+                top.linkTo(title1Ref.bottom)
                 start.linkTo(parent.start)
                 width = Dimension.preferredWrapContent
             }
         )
         Text(
-            text = "Value 2",
-            modifier = Modifier.constrainAs(value2) {
-                top.linkTo(title2.top)
-                start.linkTo(value1.start)
+            text = value2,
+            modifier = Modifier.constrainAs(value2Ref) {
+                top.linkTo(title2Ref.top)
+                start.linkTo(value1Ref.start)
                 end.linkTo(parent.end)
                 width = Dimension.preferredWrapContent
             }
         )
 
         createHorizontalChain(
-            title1, value1,
+            title1Ref, value1Ref,
             chainStyle = ChainStyle.SpreadInside
         )
         createHorizontalChain(
-            title2, value2,
+            title2Ref, value2Ref,
             chainStyle = ChainStyle.SpreadInside
         )
     }
@@ -112,17 +118,22 @@ fun SummaryViewItem(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun SummaryView() {
+fun SummaryView(
+    equity: BigDecimal? = null,
+    balance: BigDecimal? = null,
+    margin: BigDecimal? = null,
+    usedValue: BigDecimal? = null) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(10.dp)
-        .height(40.dp)
+        .height(60.dp)
         .clip(RoundedCornerShape(4.dp))
         .background(Color.Blue)) {
         Box(modifier = Modifier
             .weight(1f)
             .background(Color.Red)) {
-            SummaryViewItem()
+            SummaryViewItem(title1 = "Equity", value1 = equity.toPriceString(),
+                title2 = "Balance", value2 = balance.toPriceString())
         }
         Divider(modifier = Modifier
             .padding(4.dp)
@@ -133,7 +144,8 @@ fun SummaryView() {
         Box(modifier = Modifier
             .weight(1f)
             .background(Color.Green)) {
-            SummaryViewItem()
+            SummaryViewItem(title1 = "Margin", value1 = margin.toPriceString(),
+                title2 = "Used", value2 = usedValue.toPriceString())
         }
 
     }
@@ -238,4 +250,11 @@ fun WatchlistItemView(item: WatchlistItem = WatchlistItem("AAPL", BigDecimal(10.
 data class WatchlistItem(val symbol: String, val prev: BigDecimal, val sell: BigDecimal, val buy: BigDecimal, val price: BigDecimal) {
     val change: BigDecimal
         get() = ((price - prev) / prev).setScale(3, RoundingMode.CEILING)
+}
+
+fun BigDecimal?.toPriceString(textForEmpty: String = "-"): String {
+    return this?.let {
+        "\$${this?.setScale(2, RoundingMode.HALF_UP)?.toPlainString()}"
+    } ?: textForEmpty
+
 }

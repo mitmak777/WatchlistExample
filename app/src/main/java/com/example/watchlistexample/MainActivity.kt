@@ -1,6 +1,5 @@
 package com.example.watchlistexample
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -26,17 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.watchlistexample.domain.ForexWatchlistUseCase
-import com.example.watchlistexample.domain.ForexWatchlistUseCaseImpl
 import com.example.watchlistexample.ui.ForexWatchlistViewModel
 import com.example.watchlistexample.ui.theme.WatchlistExampleTheme
 import com.example.watchlistexample.ui.view.PortfolioScreen
 import com.example.watchlistexample.ui.view.WatchlistScreen
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,6 +50,16 @@ class MainActivity : ComponentActivity() {
             MainScreen()
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        vm.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        vm.onResume()
     }
 }
 
