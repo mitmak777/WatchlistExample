@@ -1,10 +1,9 @@
 package com.example.watchlistexample.data.datasource
 
 import com.example.watchlistexample.data.interfaces.AccountBalanceRepo
-import com.example.watchlistexample.data.model.AccountFxItem
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.AccountFxItem
+import com.example.watchlistexample.domain.model.ForexDetail
 import java.math.BigDecimal
-import java.math.RoundingMode
 import javax.inject.Inject
 
 class AccountBalanceRepoImpl @Inject constructor(): AccountBalanceRepo {

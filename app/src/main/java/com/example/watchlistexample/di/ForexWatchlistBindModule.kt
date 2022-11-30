@@ -4,12 +4,11 @@ import com.example.watchlistexample.data.datasource.AccountBalanceRepoImpl
 import com.example.watchlistexample.data.interfaces.AccountBalanceRepo
 import com.example.watchlistexample.data.interfaces.ForexListRepo
 import com.example.watchlistexample.data.repo.ForexListRepoImpl
-import com.example.watchlistexample.domain.ForexWatchlistUseCase
+import com.example.watchlistexample.domain.interfaces.ForexWatchlistUseCase
 import com.example.watchlistexample.domain.ForexWatchlistUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module

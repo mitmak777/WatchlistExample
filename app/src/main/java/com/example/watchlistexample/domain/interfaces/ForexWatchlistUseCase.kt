@@ -1,6 +1,7 @@
-package com.example.watchlistexample.domain
+package com.example.watchlistexample.domain.interfaces
 
-import com.example.watchlistexample.data.model.AccountFxItem
+import com.example.watchlistexample.domain.model.AccountFxItem
+import com.example.watchlistexample.domain.model.ForexDetail
 import kotlinx.coroutines.flow.Flow
 
 

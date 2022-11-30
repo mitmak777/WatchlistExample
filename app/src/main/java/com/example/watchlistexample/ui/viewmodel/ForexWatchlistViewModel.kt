@@ -1,11 +1,11 @@
-package com.example.watchlistexample.ui
+package com.example.watchlistexample.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.watchlistexample.data.model.AccountFxItem
-import com.example.watchlistexample.domain.ForexDetail
-import com.example.watchlistexample.domain.ForexWatchlistUseCase
+import com.example.watchlistexample.domain.model.AccountFxItem
+import com.example.watchlistexample.domain.model.ForexDetail
+import com.example.watchlistexample.domain.interfaces.ForexWatchlistUseCase
 import com.example.watchlistexample.ui.view.WatchlistItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

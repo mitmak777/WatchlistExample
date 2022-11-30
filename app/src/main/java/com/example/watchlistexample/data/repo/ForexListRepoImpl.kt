@@ -3,7 +3,7 @@ package com.example.watchlistexample.data.repo
 import com.example.watchlistexample.data.interfaces.ForexListRepo
 import com.example.watchlistexample.data.datasource.ForexAPIService
 import com.example.watchlistexample.data.datasource.LocalFxRealTimeUpdateDatasource
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.ForexDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow

@@ -1,13 +1,13 @@
 package com.example.watchlistexample.data.datasource
 
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.ForexDetail
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.isActive
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
-import java.math.BigDecimal
 import kotlin.random.Random
 
 class LocalFxRealTimeUpdateDatasource {
@@ -32,7 +32,7 @@ class LocalFxRealTimeUpdateDatasource {
                     }))
                 }
             }
-        }
+        }.flowOn(Dispatchers.IO)
 
     }
 

@@ -1,6 +1,6 @@
 package com.example.watchlistexample.data.interfaces
 
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.ForexDetail
 import kotlinx.coroutines.flow.Flow
 
 interface ForexListRepo {

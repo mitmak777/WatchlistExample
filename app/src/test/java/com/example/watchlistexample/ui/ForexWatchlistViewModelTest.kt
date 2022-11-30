@@ -3,11 +3,11 @@ package com.example.watchlistexample.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.example.watchlistexample.MainCoroutineRule
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.ForexDetail
 import com.example.watchlistexample.domain.ForexWatchlistUseCaseImpl
+import com.example.watchlistexample.ui.viewmodel.ForexWatchlistViewModel
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking

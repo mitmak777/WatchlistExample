@@ -1,4 +1,4 @@
-package com.example.watchlistexample.domain
+package com.example.watchlistexample.domain.model
 
 import java.math.BigDecimal
 

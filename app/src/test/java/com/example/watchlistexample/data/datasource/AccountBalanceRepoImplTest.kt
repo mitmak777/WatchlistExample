@@ -1,6 +1,6 @@
 package com.example.watchlistexample.data.datasource
 
-import com.example.watchlistexample.domain.ForexDetail
+import com.example.watchlistexample.domain.model.ForexDetail
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test

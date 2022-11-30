@@ -20,7 +20,7 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.watchlistexample.ui.ForexWatchlistViewModel
+import com.example.watchlistexample.ui.viewmodel.ForexWatchlistViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 

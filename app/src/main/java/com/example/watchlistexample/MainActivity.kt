@@ -1,8 +1,5 @@
 package com.example.watchlistexample
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -28,7 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.watchlistexample.ui.ForexWatchlistViewModel
+import com.example.watchlistexample.ui.viewmodel.ForexWatchlistViewModel
 import com.example.watchlistexample.ui.theme.WatchlistExampleTheme
 import com.example.watchlistexample.ui.view.PortfolioScreen
 import com.example.watchlistexample.ui.view.WatchlistScreen

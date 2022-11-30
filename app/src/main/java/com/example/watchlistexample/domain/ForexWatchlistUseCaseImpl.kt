@@ -1,9 +1,10 @@
 package com.example.watchlistexample.domain
 
-import com.example.watchlistexample.data.datasource.ForexAPIService
 import com.example.watchlistexample.data.interfaces.AccountBalanceRepo
 import com.example.watchlistexample.data.interfaces.ForexListRepo
-import com.example.watchlistexample.data.model.AccountFxItem
+import com.example.watchlistexample.domain.model.AccountFxItem
+import com.example.watchlistexample.domain.interfaces.ForexWatchlistUseCase
+import com.example.watchlistexample.domain.model.ForexDetail
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
