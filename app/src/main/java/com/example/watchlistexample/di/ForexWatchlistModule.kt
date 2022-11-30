@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ViewModelComponent::class)
 object ForexWatchlistModule {
 
     @Provides

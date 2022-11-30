@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,27 +25,29 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.watchlistexample.domain.ForexWatchlistUseCase
 import com.example.watchlistexample.domain.ForexWatchlistUseCaseImpl
+import com.example.watchlistexample.ui.ForexWatchlistViewModel
 import com.example.watchlistexample.ui.theme.WatchlistExampleTheme
 import com.example.watchlistexample.ui.view.PortfolioScreen
 import com.example.watchlistexample.ui.view.WatchlistScreen
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var forexWatchlistUseCase: ForexWatchlistUseCase
+
+    private val vm: ForexWatchlistViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenStarted {
-            forexWatchlistUseCase.getForexList(listOf("EURUSD", "GBPUSD")).collectLatest {
-                Log.e("MainActivity", "result: $it")
+        lifecycleScope.launch{
+            vm.equityFlow.collectLatest {
+                Log.d("MainActivity", "Equity: $it")
             }
-
         }
+        vm.updateFxPair(listOf("EURUSD"))
         setContent {
             MainScreen()
         }

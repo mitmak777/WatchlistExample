@@ -5,11 +5,11 @@ import com.example.watchlistexample.data.datasource.ForexAPIService
 import com.example.watchlistexample.data.datasource.LocalFxRealTimeUpdateDatasource
 import com.example.watchlistexample.domain.ForexDetail
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import java.math.BigDecimal
-import java.time.LocalDate.now
-import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 class ForexListRepoImpl @Inject constructor(
     private val forexAPIService: ForexAPIService,
@@ -22,14 +22,15 @@ class ForexListRepoImpl @Inject constructor(
                     it.rates?.let {
                         val forexList = it.map { (key, value) ->
                             ForexDetail(key,
-                                value.rate ?: BigDecimal.ZERO,
-                                value.rate ?: BigDecimal.ZERO,
-                                value.rate ?: BigDecimal.ZERO,
-                                value.rate ?: BigDecimal.ZERO,
-                                value.timestamp ?: Date().time
+                                value.rate ,
+                                BigDecimal.valueOf(value.rate.toDouble() * Random.nextDouble(1.0, 1.1)),
+                                BigDecimal.valueOf(value.rate.toDouble() * Random.nextDouble(0.9, 1.0)),
+                                value.rate ,
+                                value.timestamp
                             )
                         }
                         emit(Result.success(forexList))
+                        emitAll(realtimeSource.getForexRealTimeUpdate(forexList))
                     }
                 }
 
