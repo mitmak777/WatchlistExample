@@ -20,8 +20,8 @@ class LocalFxRealTimeUpdateDatasource {
                     ForexDetail(
                         it.forexPair,
                         nextPrice.toBigDecimal(),
-                        (nextPrice * Random.nextDouble(1.0, 1.1)).toBigDecimal(),
                         (nextPrice * Random.nextDouble(0.9, 1.0)).toBigDecimal(),
+                        (nextPrice * Random.nextDouble(1.0, 1.1)).toBigDecimal(),
                         it.prevPrice,
                         it.timestamp
                     )

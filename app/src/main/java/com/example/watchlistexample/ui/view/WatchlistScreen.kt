@@ -1,11 +1,13 @@
 package com.example.watchlistexample.ui.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -16,32 +18,25 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import com.example.watchlistexample.ui.ForexWatchlistViewModel
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 @Composable
-fun WatchlistScreen() {
+fun WatchlistScreen(viewModel: ForexWatchlistViewModel = hiltViewModel()) {
+    val list = viewModel.fxListStateFlow.collectAsState()
     Surface {
         Column {
             SummaryView()
             WatchlistHeaderCellView()
-            val list = listOf(
-                WatchlistItem("AAPL", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL1", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL2", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL3", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL4", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL5", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL6", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL7", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL8", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL9", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL10", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)),
-                WatchlistItem("AAPL11", BigDecimal(10.0), BigDecimal(11.0), BigDecimal(11.0), BigDecimal(10.0)))
+
             LazyColumn() {
 
-                items(list.size, key = {index ->  list[index].symbol}) { index ->
+                items(list.value.size, key = { index -> list.value.get(index).symbol }) { index ->
 
-                    WatchlistItemView(list[index])
+                    WatchlistItemView(list.value.get(index))
                 }
 
             }
@@ -229,7 +224,7 @@ fun WatchlistItemView(item: WatchlistItem = WatchlistItem("AAPL", BigDecimal(10.
                 .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.symbol)
             Text(modifier = Modifier
                 .weight(0.25f)
-                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.getChange().toString())
+                .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = "${item.change}%")
             Text(modifier = Modifier
                 .weight(0.25f)
                 .fillMaxHeight(), textAlign = TextAlign.Center, color = Color.Black, text = item.sell.toString())
@@ -240,8 +235,7 @@ fun WatchlistItemView(item: WatchlistItem = WatchlistItem("AAPL", BigDecimal(10.
     }
 }
 
-data class WatchlistItem(val symbol: String, val prev: BigDecimal, val sell: BigDecimal, val buy: BigDecimal, val price: BigDecimal)
-
-fun WatchlistItem.getChange(): BigDecimal {
-    return (price - prev) / prev
+data class WatchlistItem(val symbol: String, val prev: BigDecimal, val sell: BigDecimal, val buy: BigDecimal, val price: BigDecimal) {
+    val change: BigDecimal
+        get() = ((price - prev) / prev).setScale(3, RoundingMode.CEILING)
 }

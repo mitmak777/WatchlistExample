@@ -31,6 +31,8 @@ class ForexListRepoImpl @Inject constructor(
                         }
                         emit(Result.success(forexList))
                         emitAll(realtimeSource.getForexRealTimeUpdate(forexList))
+                    } ?: run {
+                        emit(Result.failure(Exception(it.message ?: "No data")))
                     }
                 }
 

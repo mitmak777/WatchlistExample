@@ -7,7 +7,7 @@ data class ForexNetworkReponse(
 
     @SerializedName("rates") var rates: Map<String, RateDetail>? = null,
     @SerializedName("code") var code: Int,
-    @SerializedName("message") var message: String = ""
+    @SerializedName("message") var message: String? = null
 )
 
 data class RateDetail(

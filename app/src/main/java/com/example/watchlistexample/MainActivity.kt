@@ -1,5 +1,6 @@
 package com.example.watchlistexample
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -10,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,7 +45,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             vm.equityFlow.collectLatest {
                 Log.d("MainActivity", "Equity: $it")
             }
@@ -51,6 +54,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainScreen()
         }
+
     }
 }
 
@@ -80,8 +84,18 @@ fun MainScreen() {
 
 @Composable
 fun NavigationGraph(modifier: Modifier = Modifier, navController: NavHostController) {
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+    }
     NavHost(modifier = modifier, navController = navController, startDestination = "watchlist") {
-        composable("watchlist") { WatchlistScreen() }
+        composable("watchlist") {
+            // provide the viewModelStoreOwner to the WatchlistScreen so that it can reuse the same viewmodel
+            CompositionLocalProvider(
+                LocalViewModelStoreOwner provides viewModelStoreOwner
+            ) {
+                WatchlistScreen()
+            }
+        }
         composable("portfolio") { PortfolioScreen() }
         composable("tab3") { Text(text = "TODO") }
         composable("setting") { Text(text = "TODO") }
